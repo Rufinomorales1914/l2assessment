@@ -1,41 +1,53 @@
-/**
- * Urgency Scorer - Rule-based urgency calculation
- */
-
 export function calculateUrgency(message) {
   let urgencyScore = 50
-  
-  const exclamationCount = (message.match(/!/g) || []).length
-  urgencyScore += exclamationCount * 30
-  
-  if (message.length < 50) urgencyScore -= 40
-  if (message.length < 20) urgencyScore -= 60
-  
+  const lowerMessage = message.toLowerCase()
+
+  const criticalWords = [
+    'down', 'outage', 'urgent', 'critical', 'emergency',
+    'immediately', 'production', 'losing', 'lost', 'broken',
+    'not working', 'cant access', "can't access", 'blocked',
+    'charged twice', 'double charged', 'refund', 'unauthorized',
+    'breach', 'hacked', 'security', 'data loss'
+  ]
+
+  const lowUrgencyWords = [
+    'thank you', 'thanks', 'happy', 'love', 'great',
+    'wonderful', 'excellent', 'appreciate', 'feedback',
+    'suggestion', 'feature request', 'dark mode', 'would love'
+  ]
+
+  const mediumUrgencyWords = [
+    'issue', 'problem', 'error', 'bug', 'slow',
+    'question', 'help', 'support', 'billing', 'upgrade'
+  ]
+
+  criticalWords.forEach(word => {
+    if (lowerMessage.includes(word)) urgencyScore += 25
+  })
+
+  lowUrgencyWords.forEach(word => {
+    if (lowerMessage.includes(word)) urgencyScore -= 20
+  })
+
+  mediumUrgencyWords.forEach(word => {
+    if (lowerMessage.includes(word)) urgencyScore += 10
+  })
+
   if (message === message.toUpperCase() && message.length > 10) {
-    urgencyScore -= 50
+    urgencyScore += 20
   }
-  
-  const politeWords = ['please', 'thank', 'thanks', 'appreciate', 'kindly']
-  politeWords.forEach(word => {
-    if (message.toLowerCase().includes(word)) urgencyScore -= 15
+
+  const exclamationCount = (message.match(/!/g) || []).length
+  urgencyScore += exclamationCount * 10
+
+  const angryWords = ['unacceptable', 'ridiculous', 'furious', 'angry', 'frustrated', 'worst']
+  angryWords.forEach(word => {
+    if (lowerMessage.includes(word)) urgencyScore += 20
   })
-  
-  if (message.includes('?')) urgencyScore -= 25
-  
-  const now = new Date()
-  if (now.getDay() === 0 || now.getDay() === 6) {
-    urgencyScore -= 20
-  }
-  if (now.getHours() < 9 || now.getHours() > 17) {
-    urgencyScore -= 15
-  }
-  
-  const positiveWords = ['happy', 'love', 'great', 'excellent', 'wonderful']
-  positiveWords.forEach(word => {
-    if (message.toLowerCase().includes(word)) urgencyScore -= 20
-  })
-  
-  if (urgencyScore > 80) return "High"
-  if (urgencyScore < 30) return "Low"
+
+  urgencyScore = Math.max(0, Math.min(100, urgencyScore))
+
+  if (urgencyScore >= 70) return "High"
+  if (urgencyScore <= 35) return "Low"
   return "Medium"
 }
