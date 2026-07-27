@@ -3,11 +3,11 @@
  */
 
 const actionTemplates = {
-  "Billing Issue": "Ask user to check billing portal.",
-  "Technical Problem": "Suggest user to restart their browser.",
-  "General Inquiry": "Respond with FAQ link.",
-  "Feature Request": "Ask user to check billing portal.",
-  "Unknown": "Review manually."
+  "Billing Issue": "Verify customer account details in Stripe/Billing Dashboard, verify double charges or invoice history, and issue a full refund or billing credit if confirmed.",
+  "Technical Problem": "Check system status page for outages, review browser console logs/error screenshots from user, and escalate to engineering tier 2 if reproducible.",
+  "General Inquiry": "Provide the relevant Knowledge Base article link and offer to walk them through the setup step-by-step if needed.",
+  "Feature Request": "Log the request in Product Feedback Tracker, tag the feature category, and inform the user that it has been passed to the product team for evaluation.",
+  "Unknown": "Escalate immediately to senior support manager for manual review and direct outreach within 1 hour."
 }
 
 /**
